@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary palette */
+  --color-primary: #7EB8D4;
+  --color-primary-light: #A8D8EA;
+  --color-primary-dark: #5A9AB5;
+  --color-secondary: #C3AED6;
+  --color-secondary-light: #E2C2FF;
+  --color-secondary-dark: #9B7EBF;
+  --color-accent: #FFD6A5;
+  --color-accent-dark: #F0B87A;
+  --color-success: #B5EAD7;
+  --color-success-dark: #7DCBA8;
+  --color-warning: #FFDAC1;
+  --color-warning-dark: #F0A882;
+  --color-error: #F2B5B5;
+  --color-error-dark: #D98E8E;
+
+  /* Surfaces */
+  --color-bg: #FAFBFD;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F3F7;
+  --color-surface-hover: #F0EDF4;
+
+  /* Borders */
+  --color-border: #E8E4ED;
+  --color-border-light: #F0EDF4;
+
+  /* Text */
+  --color-text: #2D2B3A;
+  --color-text-secondary: #6B6880;
+  --color-text-muted: #9E9BAD;
+
+  /* Fund colors */
+  --color-fund-muebles: #A8D8EA;
+  --color-fund-emergencia: #B5EAD7;
+  --color-fund-arriendo: #E2C2FF;
+  --color-fund-colchon: #FFD6A5;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(45, 43, 58, 0.04), 0 1px 2px rgba(45, 43, 58, 0.02);
+  --shadow-md: 0 4px 12px rgba(45, 43, 58, 0.06), 0 2px 4px rgba(45, 43, 58, 0.03);
+  --shadow-lg: 0 8px 24px rgba(45, 43, 58, 0.08), 0 4px 8px rgba(45, 43, 58, 0.04);
+
+  /* Fonts */
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+}
+
+*,*::before,*::after { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+}
+
+::selection {
+  background: var(--color-primary-light);
+  color: var(--color-text);
+}
+
+/* Custom scrollbar */
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-thumb { background: rgba(45,43,58,0.12); border-radius: 3px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* Smooth transitions globally */
+* {
+  transition-property: background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Override for layout elements that shouldn't transition */
+main, aside, nav, div, section, article {
+  transition: none;
+}

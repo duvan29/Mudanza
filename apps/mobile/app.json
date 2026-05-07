@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Mudanza",
+    "slug": "mudanza",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "mudanza",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#FAFBFD"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mudanza.app"
+    },
+    "android": {
+      "package": "com.mudanza.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FAFBFD"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font"
+    ]
+  }
+}
