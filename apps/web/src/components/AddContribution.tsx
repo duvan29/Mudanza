@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PiggyBank, Loader2, Sparkles, Check } from 'lucide-react';
+import { CurrencyInput } from './CurrencyInput';
 
 interface Distribution {
   fundName: string;
@@ -115,10 +116,9 @@ export function AddContribution({ funds, totalTarget }: { funds: Fund[]; totalTa
             <label className="block text-xs font-medium text-text-secondary mb-1.5 uppercase tracking-wider">
               Monto total (COP)
             </label>
-            <input
-              type="number"
+            <CurrencyInput
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={setAmount}
               placeholder="1.000.000"
               className="w-full px-4 py-3.5 rounded-[var(--radius-md)] border border-border bg-surface-alt text-text text-lg font-semibold placeholder:text-text-muted placeholder:font-normal focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-light/30 tabular-nums"
               required

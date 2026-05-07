@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { formatCOP } from '@/lib/utils';
 import { MovementRow } from './MovementRow';
 import { ChevronDown, ChevronUp, Plus, Send, Loader2, ArrowUpRight, Settings2 } from 'lucide-react';
+import { CurrencyInput } from './CurrencyInput';
 
 interface Fund {
   _id: string;
@@ -147,11 +148,10 @@ export function FundDetail({ fund }: { fund: Fund }) {
                   </button>
                 ))}
               </div>
-              <input
-                type="number"
+              <CurrencyInput
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="Monto (COP)"
+                onChange={setAmount}
+                placeholder="1.000.000"
                 className="w-full px-4 py-3 rounded-[var(--radius-md)] border border-border bg-surface-alt text-text placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-light/30 text-sm"
                 required
               />

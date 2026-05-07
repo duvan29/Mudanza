@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatCOP } from '@/lib/utils';
 import { Plus, Trophy, ExternalLink, Loader2, ShoppingBag, ChevronRight, CheckCircle, BadgeDollarSign, Star } from 'lucide-react';
+import { CurrencyInput } from './CurrencyInput';
 
 interface Product {
   _id: string;
@@ -129,7 +130,7 @@ export function ProductsList({ initialProducts, funds }: { initialProducts: Prod
       {showForm && (
         <form onSubmit={handleCreateProduct} className="bg-surface rounded-[var(--radius-xl)] border border-border-light shadow-[var(--shadow-md)] p-5 space-y-3">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre del producto — ej: Nevera" className={inputClass} required />
-          <input type="number" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Presupuesto (COP)" className={inputClass} required />
+          <CurrencyInput value={budget} onChange={setBudget} placeholder="1.000.000" className={inputClass} required />
           <div>
             <p className="text-xs text-text-muted mb-2 uppercase tracking-wider font-medium">Fondo asociado</p>
             <div className="flex flex-wrap gap-2">
@@ -190,7 +191,7 @@ export function ProductsList({ initialProducts, funds }: { initialProducts: Prod
                 <form onSubmit={handleCreateVersion} className="space-y-2.5 bg-surface-alt rounded-[var(--radius-lg)] p-4 border border-border-light">
                   <input value={vName} onChange={(e) => setVName(e.target.value)} placeholder="Nombre — ej: Samsung RT29K" className={inputClass} required />
                   <div className="grid grid-cols-2 gap-2">
-                    <input type="number" value={vPrice} onChange={(e) => setVPrice(e.target.value)} placeholder="Precio (COP)" className={inputClass} required />
+                    <CurrencyInput value={vPrice} onChange={setVPrice} placeholder="1.500.000" className={inputClass} required />
                     <input value={vStore} onChange={(e) => setVStore(e.target.value)} placeholder="Tienda" className={inputClass} required />
                   </div>
                   <input value={vLink} onChange={(e) => setVLink(e.target.value)} placeholder="Link (opcional)" className={inputClass} />
