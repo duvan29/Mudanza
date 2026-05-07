@@ -9,7 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session) redirect('/login');
 
   await connectDB();
-  const user = await User.findById(session.userId).select('displayName email').lean();
+  const user = await User.findById(session.userId).select('displayName email').lean() as any;
   if (!user) redirect('/login');
 
   return (

@@ -11,8 +11,8 @@ export async function GET() {
 
   await connectDB();
 
-  const funds = await Fund.find().sort({ order: 1 }).lean();
-  const totalSaved = funds.reduce((sum, f) => sum + f.saved, 0);
+  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
+  const totalSaved = funds.reduce((sum: number, f: any) => sum + f.saved, 0);
   const totalTarget = TOTAL_TARGET;
   const percentage = totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0;
   const remaining = totalTarget - totalSaved;
@@ -47,8 +47,8 @@ export async function GET() {
     { $group: { _id: '$userId', totalContributed: { $sum: '$amount' } } },
   ]);
 
-  const users = await User.find().select('displayName').lean();
-  const userMap = Object.fromEntries(users.map((u) => [u._id.toString(), u.displayName]));
+  const users = await User.find().select('displayName').lean() as any[];
+  const userMap = Object.fromEntries(users.map((u: any) => [u._id.toString(), u.displayName]));
 
   const contributionsFormatted = contributionsByUser.map((c) => ({
     userId: c._id.toString(),

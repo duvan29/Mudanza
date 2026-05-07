@@ -9,8 +9,8 @@ export default async function MetricasPage() {
   await requireSession();
   await connectDB();
 
-  const funds = await Fund.find().sort({ order: 1 }).lean();
-  const totalSaved = funds.reduce((sum, f) => sum + f.saved, 0);
+  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
+  const totalSaved = funds.reduce((sum: number, f: any) => sum + f.saved, 0);
   const percentage = Math.round((totalSaved / TOTAL_TARGET) * 100);
   const remaining = TOTAL_TARGET - totalSaved;
 
@@ -32,8 +32,8 @@ export default async function MetricasPage() {
     { $match: { deleted: false } },
     { $group: { _id: '$userId', total: { $sum: '$amount' } } },
   ]);
-  const users = await User.find().select('displayName').lean();
-  const userMap = Object.fromEntries(users.map((u) => [u._id.toString(), u.displayName]));
+  const users = await User.find().select('displayName').lean() as any[];
+  const userMap = Object.fromEntries(users.map((u: any) => [u._id.toString(), u.displayName]));
 
   const monthNames: Record<string, string> = {
     '01': 'Ene', '02': 'Feb', '03': 'Mar', '04': 'Abr',

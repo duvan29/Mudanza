@@ -10,7 +10,7 @@ export default async function FondosPage() {
   await requireSession();
   await connectDB();
 
-  const funds = await Fund.find().sort({ order: 1 }).lean();
+  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
   const totalSaved = funds.reduce((sum, f) => sum + f.saved, 0);
   const totalPct = Math.round((totalSaved / TOTAL_TARGET) * 100);
 

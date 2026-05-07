@@ -8,7 +8,7 @@ export default async function RoadmapPage() {
   await requireSession();
   await connectDB();
 
-  const months = await RoadmapMonth.find().sort({ order: 1 }).lean();
+  const months = await RoadmapMonth.find().sort({ order: 1 }).lean() as any[];
   const doneCount = months.filter((m) => m.status === 'done').length;
 
   return (

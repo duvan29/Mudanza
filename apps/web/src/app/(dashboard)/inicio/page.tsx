@@ -13,9 +13,9 @@ export default async function InicioPage() {
   const session = await requireSession();
   await connectDB();
 
-  const currentUser = await User.findById(session.userId).select('displayName').lean();
+  const currentUser = await User.findById(session.userId).select('displayName').lean() as any;
 
-  const funds = await Fund.find().sort({ order: 1 }).lean();
+  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
   const totalSaved = funds.reduce((sum, f) => sum + f.saved, 0);
   const percentage = Math.round((totalSaved / TOTAL_TARGET) * 100);
   const remaining = TOTAL_TARGET - totalSaved;
@@ -24,7 +24,7 @@ export default async function InicioPage() {
     .sort({ date: -1 })
     .limit(5)
     .populate('userId', 'displayName')
-    .lean();
+    .lean() as any[];
 
   // Velocity
   const monthlyHistory = await Movement.aggregate([
@@ -45,8 +45,8 @@ export default async function InicioPage() {
     { $match: { deleted: false } },
     { $group: { _id: '$userId', total: { $sum: '$amount' } } },
   ]);
-  const users = await User.find().select('displayName').lean();
-  const userMap = Object.fromEntries(users.map((u) => [u._id.toString(), u.displayName]));
+  const users = await User.find().select('displayName').lean() as any[];
+  const userMap = Object.fromEntries(users.map((u: any) => [u._id.toString(), u.displayName]));
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">

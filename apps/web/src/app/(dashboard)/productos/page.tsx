@@ -7,8 +7,8 @@ export default async function ProductosPage() {
   await requireSession();
   await connectDB();
 
-  const products = await ProductGoal.find().sort({ createdAt: -1 }).lean();
-  const funds = await Fund.find().sort({ order: 1 }).lean();
+  const products = await ProductGoal.find().sort({ createdAt: -1 }).lean() as any[];
+  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
