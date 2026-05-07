@@ -6,6 +6,10 @@ dist/
 .turbo/
 .next/
 
+# Ignore legacy apps
+apps/api/
+apps/mobile/
+
 # Expo
 .expo/
 ios/
