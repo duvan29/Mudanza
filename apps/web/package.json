@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "seed": "npx tsx scripts/seed.ts",
-    "migrate:jan15": "npx tsx scripts/migrate-jan15.ts"
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
     "@mudanza/types": "workspace:*",

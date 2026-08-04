@@ -18,7 +18,6 @@ Private savings tracker for Duvan & Kata — January 15, 2027 apartment move.
 ```
 pnpm dev                # Run the web app
 pnpm seed               # Seed DB with users, funds, roadmap (create-if-missing, safe on an empty DB)
-pnpm migrate:jan15      # One-time migration: apply new fund targets + roadmap to an already-seeded DB
 ```
 
 ### Colors (pastel, soft)

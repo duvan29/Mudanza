@@ -3,10 +3,12 @@ import { Fund, Movement, User } from '@/lib/models';
 import { requireSession } from '@/lib/auth';
 import { formatCOP } from '@/lib/utils';
 import { computeMetrics } from '@/lib/metrics';
+import { TIMELINE } from '@mudanza/types';
 import { ProgressRing } from '@/components/ProgressRing';
 import { FundCard } from '@/components/FundCard';
 import { MovementRow } from '@/components/MovementRow';
 import { AddContribution } from '@/components/AddContribution';
+import { CountdownTimer } from '@/components/CountdownTimer';
 import { CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default async function InicioPage() {
@@ -33,6 +35,9 @@ export default async function InicioPage() {
         </h1>
         <p className="text-text-muted mt-1 text-sm">Tu mudanza está en camino</p>
       </div>
+
+      {/* Countdown */}
+      <CountdownTimer targetDate={TIMELINE.end} />
 
       {/* Hero Progress Card */}
       <div className="relative bg-surface rounded-[var(--radius-2xl)] p-8 shadow-[var(--shadow-lg)] border border-border-light overflow-hidden">
