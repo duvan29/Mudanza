@@ -1,18 +1,16 @@
 import { connectDB } from '@/lib/db';
-import { Fund, Movement, User } from '@/lib/models';
+import { Movement } from '@/lib/models';
 import { requireSession } from '@/lib/auth';
 import { formatCOP } from '@/lib/utils';
-import { TOTAL_TARGET } from '@mudanza/types';
+import { computeMetrics } from '@/lib/metrics';
 import { TrendingUp, Target, Zap, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default async function MetricasPage() {
   await requireSession();
   await connectDB();
 
-  const funds = await Fund.find().sort({ order: 1 }).lean() as any[];
-  const totalSaved = funds.reduce((sum: number, f: any) => sum + f.saved, 0);
-  const percentage = Math.round((totalSaved / TOTAL_TARGET) * 100);
-  const remaining = TOTAL_TARGET - totalSaved;
+  const metrics = await computeMetrics();
+  const funds = metrics.funds;
 
   const monthlyHistory = await Movement.aggregate([
     { $match: { deleted: false } },
@@ -21,20 +19,6 @@ export default async function MetricasPage() {
     { $limit: 12 },
   ]);
 
-  const recentMonths = monthlyHistory.slice(0, 3);
-  const velocity = recentMonths.length > 0
-    ? Math.round(recentMonths.reduce((s, m) => s + m.total, 0) / recentMonths.length)
-    : 0;
-  const monthlyRequired = remaining > 0 ? Math.round(remaining / 5) : 0;
-  const onTrack = velocity >= monthlyRequired;
-
-  const contributions = await Movement.aggregate([
-    { $match: { deleted: false } },
-    { $group: { _id: '$userId', total: { $sum: '$amount' } } },
-  ]);
-  const users = await User.find().select('displayName').lean() as any[];
-  const userMap = Object.fromEntries(users.map((u: any) => [u._id.toString(), u.displayName]));
-
   const monthNames: Record<string, string> = {
     '01': 'Ene', '02': 'Feb', '03': 'Mar', '04': 'Abr',
     '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Ago',
@@ -42,10 +26,10 @@ export default async function MetricasPage() {
   };
 
   const statCards = [
-    { icon: Target, label: 'Completado', value: `${percentage}%`, color: 'from-primary-light to-primary' },
-    { icon: Zap, label: 'Velocidad/mes', value: formatCOP(velocity), color: 'from-accent to-accent-dark' },
-    { icon: TrendingUp, label: 'Necesario/mes', value: formatCOP(monthlyRequired), color: 'from-secondary-light to-secondary' },
-    { icon: Clock, label: 'Proyección', value: onTrack ? 'A tiempo' : 'Ajustar', color: onTrack ? 'from-success to-success-dark' : 'from-warning to-warning-dark' },
+    { icon: Target, label: 'Completado', value: `${metrics.percentage}%`, color: 'from-primary-light to-primary' },
+    { icon: Zap, label: 'Velocidad/mes', value: formatCOP(metrics.currentVelocity), color: 'from-accent to-accent-dark' },
+    { icon: TrendingUp, label: 'Necesario/mes', value: formatCOP(metrics.monthlyRequired), color: 'from-secondary-light to-secondary' },
+    { icon: Clock, label: 'Proyección', value: metrics.onTrack ? 'A tiempo' : 'Ajustar', color: metrics.onTrack ? 'from-success to-success-dark' : 'from-warning to-warning-dark' },
   ];
 
   return (
@@ -72,24 +56,21 @@ export default async function MetricasPage() {
       <section>
         <h2 className="font-display text-xl font-semibold text-text mb-4">Por fondo</h2>
         <div className="space-y-3">
-          {funds.map((fund) => {
-            const pct = fund.target > 0 ? Math.round((fund.saved / fund.target) * 100) : 0;
-            return (
-              <div key={fund._id.toString()} className="bg-surface rounded-[var(--radius-lg)] border border-border-light p-4 shadow-[var(--shadow-sm)]">
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: fund.color }} />
-                    <span className="text-sm font-medium text-text">{fund.name}</span>
-                  </div>
-                  <span className="text-sm font-bold" style={{ color: fund.color }}>{pct}%</span>
+          {funds.map((fund) => (
+            <div key={fund.fundId} className="bg-surface rounded-[var(--radius-lg)] border border-border-light p-4 shadow-[var(--shadow-sm)]">
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: fund.color }} />
+                  <span className="text-sm font-medium text-text">{fund.name}</span>
                 </div>
-                <div className="w-full h-2.5 rounded-full bg-surface-alt overflow-hidden">
-                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, backgroundColor: fund.color }} />
-                </div>
-                <p className="text-xs text-text-muted mt-2">{formatCOP(fund.saved)} / {formatCOP(fund.target)}</p>
+                <span className="text-sm font-bold" style={{ color: fund.color }}>{fund.percentage}%</span>
               </div>
-            );
-          })}
+              <div className="w-full h-2.5 rounded-full bg-surface-alt overflow-hidden">
+                <div className="h-full rounded-full transition-all duration-500" style={{ width: `${fund.percentage}%`, backgroundColor: fund.color }} />
+              </div>
+              <p className="text-xs text-text-muted mt-2">{formatCOP(fund.saved)} / {formatCOP(fund.target)}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -97,28 +78,25 @@ export default async function MetricasPage() {
       <section>
         <h2 className="font-display text-xl font-semibold text-text mb-4">Aportes por persona</h2>
         <div className="bg-surface rounded-[var(--radius-xl)] border border-border-light shadow-[var(--shadow-sm)] p-5 space-y-5">
-          {contributions.map((c) => {
-            const pct = totalSaved > 0 ? Math.round((c.total / totalSaved) * 100) : 0;
-            return (
-              <div key={c._id.toString()} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-secondary-light/30 flex items-center justify-center">
-                  <span className="text-sm font-bold text-secondary-dark">
-                    {(userMap[c._id.toString()] ?? '?')[0]}
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-sm font-medium text-text">{userMap[c._id.toString()]}</span>
-                    <span className="text-sm font-semibold text-text tabular-nums">{formatCOP(c.total)}</span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-surface-alt overflow-hidden">
-                    <div className="h-full rounded-full bg-gradient-to-r from-secondary-light to-secondary transition-all" style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-                <span className="text-xs font-medium text-text-muted w-10 text-right tabular-nums">{pct}%</span>
+          {metrics.contributionsByUser.map((c) => (
+            <div key={c.userId} className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-secondary-light/30 flex items-center justify-center">
+                <span className="text-sm font-bold text-secondary-dark">
+                  {(c.displayName ?? '?')[0]}
+                </span>
               </div>
-            );
-          })}
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm font-medium text-text">{c.displayName}</span>
+                  <span className="text-sm font-semibold text-text tabular-nums">{formatCOP(c.totalContributed)}</span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-surface-alt overflow-hidden">
+                  <div className="h-full rounded-full bg-gradient-to-r from-secondary-light to-secondary transition-all" style={{ width: `${c.percentageOfTotal}%` }} />
+                </div>
+              </div>
+              <span className="text-xs font-medium text-text-muted w-10 text-right tabular-nums">{c.percentageOfTotal}%</span>
+            </div>
+          ))}
         </div>
       </section>
 

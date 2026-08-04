@@ -6,6 +6,7 @@ import { Check, Circle, Play, MessageSquare } from 'lucide-react';
 interface RoadmapMonth {
   _id: string;
   month: string;
+  year: number;
   order: number;
   action: string;
   status: 'pending' | 'active' | 'done';
@@ -82,7 +83,7 @@ export function RoadmapTimeline({ initialMonths }: { initialMonths: RoadmapMonth
             {/* Card */}
             <div className={`flex-1 mb-4 rounded-[var(--radius-lg)] border p-5 transition-all hover:shadow-[var(--shadow-sm)] ${config.cardBg} ${config.cardBorder}`}>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-text">{entry.month} 2026</span>
+                <span className="text-sm font-semibold text-text">{entry.month} {entry.year}</span>
                 <span className={`px-2.5 py-1 rounded-full text-[11px] font-semibold ${config.badgeBg}`}>
                   {config.label}
                 </span>

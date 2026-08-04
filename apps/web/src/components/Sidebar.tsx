@@ -41,7 +41,7 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
           </div>
           <div>
             <h1 className="font-display text-lg font-semibold text-text leading-tight">Mudanza</h1>
-            <p className="text-[11px] text-text-muted">Oct 2026</p>
+            <p className="text-[11px] text-text-muted">Ene 2027</p>
           </div>
         </div>
 

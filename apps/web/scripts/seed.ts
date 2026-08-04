@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import path from 'path';
+import { INITIAL_FUNDS, ROADMAP_MONTHS } from '@mudanza/types';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
-// Schemas (inline to avoid Next.js import issues)
+// Schemas (inline to avoid Next.js import issues — the constants above are a plain
+// TS package with no Next.js-specific code, so those are safe to import directly)
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   displayName: { type: String, required: true },
@@ -25,6 +27,7 @@ const fundSchema = new mongoose.Schema({
 
 const roadmapSchema = new mongoose.Schema({
   month: { type: String, required: true },
+  year: { type: Number, required: true },
   order: { type: Number, required: true },
   action: { type: String, required: true },
   status: { type: String, enum: ['pending', 'active', 'done'], default: 'pending' },
@@ -34,26 +37,6 @@ const roadmapSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 const Fund = mongoose.model('Fund', fundSchema);
 const RoadmapMonth = mongoose.model('RoadmapMonth', roadmapSchema);
-
-const INITIAL_FUNDS = [
-  { name: 'Muebles esenciales', target: 4_700_000, color: '#A8D8EA', icon: 'sofa', order: 1 },
-  { name: 'Reserva emergencia', target: 6_000_000, color: '#B5EAD7', icon: 'shield', order: 2 },
-  { name: 'Arriendo + trasteo', target: 2_000_000, color: '#E2C2FF', icon: 'truck', order: 3 },
-  { name: 'Colchón general', target: 9_300_000, color: '#FFD6A5', icon: 'piggy-bank', order: 4 },
-];
-
-const ROADMAP_MONTHS = [
-  { month: 'Ene', order: 1, action: 'Organizar finanzas y abrir cuenta de ahorro conjunta' },
-  { month: 'Feb', order: 2, action: 'Establecer aportes fijos mensuales y primer depósito' },
-  { month: 'Mar', order: 3, action: 'Investigar zonas y rangos de arriendo' },
-  { month: 'Abr', order: 4, action: 'Comparar precios de muebles esenciales' },
-  { month: 'May', order: 5, action: 'Evaluar opciones de electrodomésticos' },
-  { month: 'Jun', order: 6, action: 'Revisión de medio camino — ajustar presupuesto si necesario' },
-  { month: 'Jul', order: 7, action: 'Comenzar a comprar items con mejores ofertas' },
-  { month: 'Ago', order: 8, action: 'Buscar apartamento y agendar visitas' },
-  { month: 'Sep', order: 9, action: 'Firmar contrato y coordinar logística de trasteo' },
-  { month: 'Oct', order: 10, action: 'Mudanza — instalarse en el nuevo hogar' },
-];
 
 async function seed() {
   console.log('Connecting to MongoDB...');

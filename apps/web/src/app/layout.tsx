@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Mudanza — Duvan & Kata',
-  description: 'Tracker de ahorro para nuestra mudanza Oct 2026',
+  description: 'Tracker de ahorro para nuestra mudanza — 15 de enero 2027',
   icons: {
     icon: '/icon.svg',
   },

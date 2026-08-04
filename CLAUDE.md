@@ -1,26 +1,24 @@
 ## Project: Mudanza App
 
-Private savings tracker for Duvan & Kata — October 2026 apartment move.
+Private savings tracker for Duvan & Kata — January 15, 2027 apartment move.
 
 ### Architecture
-- Monorepo: `apps/api` (Fastify), `apps/mobile` (Expo), `packages/types` (shared TS)
-- MongoDB Atlas + Railway for API hosting
-- Expo Go on iOS for mobile
+- Monorepo: `apps/web` (Next.js 15, App Router — UI + API routes in one app), `packages/types` (shared TS)
+- MongoDB Atlas, Mongoose used directly from Next.js (no separate backend). Deploys to Vercel.
 
 ### Key Rules
-- All money as COP integers. Format only in mobile UI via `formatCOP()`.
+- All money as COP integers. Format only in the UI via `formatCOP()`.
 - Only 2 users: Duvan & Kata. No registration flow.
-- `fondo.ahorrado` is denormalized — updated via Movimiento post-save hook.
-- `elegida` exclusivity on VersionProducto via pre-save hook.
+- `Fund.saved` is denormalized — updated via `Movement` post-save hook (`recalcFund`).
+- `chosen` exclusivity on `ProductVersion` via pre-save hook.
 - API returns `{ data: T }` on success, `{ error, code }` on failure.
-- Timeline: January–October 2026 (10 months).
+- Timeline: January 2026 – January 15, 2027 (~12.5 months). See `TIMELINE`/`TOTAL_TARGET` in `packages/types/src/constants.ts`.
 
 ### Commands
 ```
-pnpm dev          # Run API + mobile
-pnpm seed         # Seed DB with users, funds, roadmap
-pnpm dev:api      # API only
-pnpm dev:mobile   # Mobile only
+pnpm dev                # Run the web app
+pnpm seed               # Seed DB with users, funds, roadmap (create-if-missing, safe on an empty DB)
+pnpm migrate:jan15      # One-time migration: apply new fund targets + roadmap to an already-seeded DB
 ```
 
 ### Colors (pastel, soft)
