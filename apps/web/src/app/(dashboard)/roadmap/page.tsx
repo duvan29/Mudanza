@@ -14,9 +14,9 @@ export default async function RoadmapPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl font-semibold text-text tracking-tight">Roadmap 2026</h1>
+        <h1 className="font-display text-3xl font-semibold text-text tracking-tight">Roadmap 2026–2027</h1>
         <p className="text-text-muted mt-1 text-sm">
-          Enero → Octubre • <span className="font-medium text-success-dark">{doneCount}/{months.length} completados</span>
+          Enero 2026 → 15 de enero 2027 • <span className="font-medium text-success-dark">{doneCount}/{months.length} completados</span>
         </p>
       </div>
 

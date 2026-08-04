@@ -21,7 +21,7 @@ export interface IMetrics {
   totalTarget: number;
   percentage: number;
   remaining: number;
-  monthlyRequired: number;          // to reach target by October
+  monthlyRequired: number;          // to reach target by the move-out date
   currentVelocity: number;          // avg monthly savings last 2 months
   projectedMonths: number | null;   // months to goal at current velocity
   onTrack: boolean;
@@ -32,9 +32,8 @@ export interface IMetrics {
     percentageOfTotal: number;
   }[];
   monthlyHistory: {
-    month: string;                  // "2026-02"
+    month: string;                  // "Febrero 2026"
     totalDeposited: number;
-    byUser: { userId: string; amount: number }[];
   }[];
   funds: {
     fundId: string;
@@ -42,5 +41,6 @@ export interface IMetrics {
     saved: number;
     target: number;
     percentage: number;
+    color: string;
   }[];
 }

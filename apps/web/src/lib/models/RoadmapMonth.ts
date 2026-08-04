@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface RoadmapMonthDoc extends Document {
   month: string;
+  year: number;
   order: number;
   action: string;
   status: 'pending' | 'active' | 'done';
@@ -12,6 +13,7 @@ export interface RoadmapMonthDoc extends Document {
 const RoadmapMonthSchema = new Schema<RoadmapMonthDoc>(
   {
     month: { type: String, required: true },
+    year: { type: Number, required: true },
     order: { type: Number, required: true },
     action: { type: String, required: true },
     status: { type: String, enum: ['pending', 'active', 'done'], default: 'pending' },

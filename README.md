@@ -1,8 +1,8 @@
 # 🏠 Mudanza App
 
-**Savings & planning tracker for Duvan & Kata — October 2026 move.**
+**Savings & planning tracker for Duvan & Kata — January 15, 2027 move.**
 
-Built with Expo · Fastify · MongoDB Atlas · TypeScript end-to-end.
+Built with Next.js · MongoDB Atlas · TypeScript end-to-end.
 
 ---
 
@@ -10,29 +10,29 @@ Built with Expo · Fastify · MongoDB Atlas · TypeScript end-to-end.
 
 ```bash
 pnpm install
-# Copy apps/api/.env.example to apps/api/.env and fill in values
+# Create apps/web/.env.local with MONGODB_URI=<your Atlas connection string>
 pnpm seed          # Seeds DB with users, funds, roadmap
-pnpm dev           # Starts API + Mobile in parallel
+pnpm dev           # Starts the web app
 ```
 
 ## Stack
 
 | Layer | Tech |
 |-------|------|
-| Mobile | Expo 52 + Expo Router + React Query + Zustand |
-| API | Fastify 5 + Mongoose + JWT |
+| Web | Next.js 15 (App Router) + React 19 |
+| API | Next.js Route Handlers + Mongoose + JWT (jose) |
 | DB | MongoDB Atlas (free tier) |
-| Deploy | Railway (API) + Expo Go (mobile) |
+| Deploy | Vercel |
 
 ## Funds
 
 | Fund | Target (COP) |
 |------|-------------|
 | Muebles esenciales | $4,700,000 |
-| Reserva emergencia | $6,000,000 |
+| Reserva emergencia | $9,000,000 |
 | Arriendo + trasteo | $2,000,000 |
-| Colchón general | $9,300,000 |
-| **Total** | **$22,000,000** |
+| Colchón general | $14,300,000 |
+| **Total** | **$30,000,000** |
 
 ## Users
 
@@ -41,4 +41,4 @@ pnpm dev           # Starts API + Mobile in parallel
 
 ---
 
-*Built for the October 2026 mudanza. — Duvan & Kata* 🏡
+*Built for the January 15, 2027 mudanza. — Duvan & Kata* 🏡

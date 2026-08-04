@@ -54,7 +54,7 @@ export default function LoginPage() {
             <Home size={36} className="text-white" />
           </div>
           <h1 className="font-display text-3xl font-semibold text-text tracking-tight">Mudanza</h1>
-          <p className="text-text-muted text-sm mt-2">Duvan & Kata — Octubre 2026</p>
+          <p className="text-text-muted text-sm mt-2">Duvan & Kata — 15 de enero 2027</p>
         </div>
 
         {/* Form card */}

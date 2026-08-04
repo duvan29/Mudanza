@@ -2,14 +2,14 @@
   "name": "mudanza",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
-    "dev:api": "pnpm --filter @mudanza/api run dev",
-    "dev:mobile": "pnpm --filter @mudanza/mobile run start",
-    "seed": "pnpm --filter @mudanza/api run seed"
+    "seed": "pnpm --filter @mudanza/web run seed",
+    "migrate:jan15": "pnpm --filter @mudanza/web run migrate:jan15"
   },
   "devDependencies": {
     "turbo": "^2.3.0",
