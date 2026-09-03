@@ -22,9 +22,11 @@ export interface IMetrics {
   percentage: number;
   remaining: number;
   monthlyRequired: number;          // to reach target by the move-out date
-  currentVelocity: number;          // avg monthly savings last 2 months
+  currentVelocity: number;          // avg monthly savings over the last 3 calendar months (0 counted for inactive months)
   projectedMonths: number | null;   // months to goal at current velocity
   onTrack: boolean;
+  lastMovementDate: string | null;  // ISO date of the most recent deposit, if any
+  daysSinceLastMovement: number | null;
   contributionsByUser: {
     userId: string;
     displayName: string;

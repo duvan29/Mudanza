@@ -17,6 +17,13 @@ const monthNames: Record<string, string> = {
   '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre',
 };
 
+/** "YYYY-MM" key for the month `monthsAgo` months before `from`, in UTC — matches the
+ *  timezone `$dateToString` groups by below, so it can look up that aggregation's buckets. */
+function monthKey(from: Date, monthsAgo: number): string {
+  const d = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth() - monthsAgo, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+}
+
 /** Single source of truth for the dashboard/timeline math — replaces the old hardcoded "5 months left". */
 export async function computeMetrics(): Promise<IMetrics> {
   await connectDB();
@@ -39,11 +46,26 @@ export async function computeMetrics(): Promise<IMetrics> {
     { $limit: 12 },
   ]);
 
-  const recentMonths = monthlyHistory.slice(0, 3);
-  const currentVelocity =
-    recentMonths.length > 0
-      ? Math.round(recentMonths.reduce((s, m) => s + m.totalDeposited, 0) / recentMonths.length)
-      : 0;
+  // Last 3 *calendar* months (this one included), not the last 3 months that happen to have
+  // a movement — monthlyHistory only contains months with at least one deposit, so slicing it
+  // directly would silently skip over a dry spell and keep averaging old, healthy months forever.
+  const now = new Date();
+  const historyByMonth = new Map(monthlyHistory.map((m) => [m._id, m.totalDeposited]));
+  const last3MonthKeys = [0, 1, 2].map((monthsAgo) => monthKey(now, monthsAgo));
+  const currentVelocity = Math.round(
+    last3MonthKeys.reduce((sum, key) => sum + (historyByMonth.get(key) ?? 0), 0) / last3MonthKeys.length
+  );
+
+  const lastMovement = await Movement.findOne({ deleted: false })
+    .sort({ date: -1 })
+    .select('date')
+    .lean() as any;
+  const lastMovementDate: string | null = lastMovement?.date
+    ? new Date(lastMovement.date).toISOString()
+    : null;
+  const daysSinceLastMovement = lastMovementDate
+    ? Math.floor((now.getTime() - new Date(lastMovementDate).getTime()) / MS_PER_DAY)
+    : null;
 
   // At least ~1 day of runway so a deadline that's today/past doesn't divide by zero or go negative.
   const monthsLeft = Math.max(monthsRemaining(new Date(TIMELINE.end)), 1 / 30);
@@ -84,6 +106,8 @@ export async function computeMetrics(): Promise<IMetrics> {
     currentVelocity,
     projectedMonths,
     onTrack,
+    lastMovementDate,
+    daysSinceLastMovement,
     contributionsByUser,
     monthlyHistory: monthlyHistory.map((m) => ({
       month: `${monthNames[m._id.split('-')[1]] ?? m._id.split('-')[1]} ${m._id.split('-')[0]}`,

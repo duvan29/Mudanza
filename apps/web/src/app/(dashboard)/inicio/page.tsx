@@ -36,6 +36,21 @@ export default async function InicioPage() {
         <p className="text-text-muted mt-1 text-sm">Tu mudanza está en camino</p>
       </div>
 
+      {/* Inactivity warning — the "on track" badge below only looks at the last 3 calendar
+          months, so a long dry spell already pulls it down, but this makes it impossible to miss. */}
+      {(metrics.daysSinceLastMovement === null || metrics.daysSinceLastMovement >= 30) && (
+        <div className="flex items-start gap-3 bg-warning/15 border border-warning/30 text-warning-dark rounded-[var(--radius-xl)] px-4 py-3.5 text-sm">
+          <AlertTriangle size={18} className="shrink-0 mt-0.5" />
+          <span>
+            {metrics.daysSinceLastMovement === null ? (
+              <>Aún no han registrado ningún aporte. ¡Agreguen el primero para empezar a avanzar!</>
+            ) : (
+              <>Llevan <strong>{metrics.daysSinceLastMovement} días</strong> sin registrar un aporte. A este ritmo no van a llegar a la meta antes de la mudanza — ¡retomen cuanto antes!</>
+            )}
+          </span>
+        </div>
+      )}
+
       {/* Countdown */}
       <CountdownTimer targetDate={TIMELINE.end} />
 
